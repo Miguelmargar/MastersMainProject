@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Dublin Bus</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Oswald:200,300,400,500,600,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/open-iconic-bootstrap.min.css">
+    <link rel="stylesheet" href="../static/css/animate.css">
+    <link rel="stylesheet" href="../static/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="../static/css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="../static/css/magnific-popup.css">
+    <link rel="stylesheet" href="../static/css/aos.css">
+    <link rel="stylesheet" href="../static/css/ionicons.min.css">
+    <link rel="stylesheet" href="../static/css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="../static/css/jquery.timepicker.css">
+    <link rel="stylesheet" href="../static/css/style1.css">
+    <link rel="stylesheet" href="../static/css/flaticon.css">
+    <link rel="stylesheet" href="../static/css/icomoon.css">
+    <link rel="stylesheet" href="../static/css/style.css">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBi-bH5_sngxNibrgygRZDhmAv2fK5hzus&libraries=places,geometry">
+    </script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+    <script type=text/javascript>
+        // Set-up connection variable between JS and Flask server application
+        $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    </script>
+
+</head>
+
+<body id="top">
+<!--nav-->
+<nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+    <div class="container">
+        <a class="navbar-brand"
+           href="../templates/index.html"><i class="flaticon-bus-stop"></i><span>Whose Bus</span></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav"
+                aria-controls="ftco-nav" aria-expanded="true" aria-label="Toggle navigation">
+            <span class="oi oi-menu"></span> Menu
+        </button>
+
+        <div class="navbar-collapse collapse" id="ftco-nav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item cta"><a href="#top" class="nav-link">Home</a></li>
+                <li class="nav-item"><a href="#belowops" class="nav-link" >OPTIONS</a></li>
+                <li class="nav-item"><a class="nav-link" onclick="showFavs()">FAVOURITES</a></li>
+                <li class="nav-item"><a href="#designer" class="nav-link" >Designer</a></li>
+
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- END nav -->
+
+
+
+<!--cover-->
+<div class="hero-wrap js-fullheight"
+     style="background-image: url('../static/images/bus3.jpg'); height: 800px;"
+     data-stellar-background-ratio="0.5";>
+
+    <div class="container">
+        <div class="row no-gutters slider-text js-fullheight align-items-center justify-content-start"
+             data-scrollax-parent="true">
+            <div class="col-md-6 mt-5 pt-5 ftco-animate mt-5" data-scrollax=" properties: { translateY: '70%' }">
+                <h1 class="mb-4" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">DUBLIN BUS</h1>
+                <p class="mb-4" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">Transport in Dublin</p>
+            </div>
+
+            <div class="col-md-6 ftco-animate" data-scrollax=" properties: { translateY: '70%' }">
+                <div class="form" style="background-color: black" enctype="multipart/form-data" autocomplete="on">
+                    <div class="form-group">
+                        <input id="start" type="text" class="form-control" placeholder="start"
+                               autocomplete="on" runat="server" onclick="stopA()"/>
+                    </div>
+                    <div class="form-group">
+                        <input id="end" type="text" class="form-control" placeholder="end"
+                               autocomplete="on" runat="server" onclick="stopB()"/>
+                    </div>
+
+                    <div class="form-group">
+                        <input id="route" type="text" class="form-control" placeholder="route"
+                               name="route">
+                    </div>
+
+                    <input class="radioform" type="radio" name="deparr" value="dep" checked> Departure Time
+                    <input class="radioform" type="radio" name="deparr" value="arr"> Arrival Time
+
+                    <div class="form-group">
+                        <input id="time" runat="server" type="time" class="form-control"
+                               name="time">
+                    </div>
+                    <div class="form-group">
+                        <input id="date" runat="server" type="date" class="form-control"
+                               name="date" min={{ today | safe }} max={{ maxDate | safe }}>
+                    </div>
+
+                    <div align="center">
+                        <p>
+                            <button id="search" type="submit" value="Submit" class="search-button" onclick="ajaxInt()"
+                            >Submit
+                            </button>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--END COVER-->
+
+<div class="inbetween"></div>
+
+<!--MAIN PART-->
+
+<a class="weatherwidget-io" href="https://forecast7.com/en/53d35n6d26/dublin/" data-label_1="DUBLIN"
+   data-label_2="WEATHER" data-theme="pure" id="belowops">DUBLIN WEATHER</a>
+
+<script>
+    !function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (!d.getElementById(id)) {
+            js = d.createElement(s);
+            js.id = id;
+            js.src = 'https://weatherwidget.io/js/widget.min.js';
+            fjs.parentNode.insertBefore(js, fjs);
+        }
+    }(document, 'script', 'weatherwidget-io-js');
+</script>
+
+<div class="options" id="ops">
+    <h1 id="hop">Options</h1>
+</div>
+
+<div class="amenities">
+    <h2 class="headerAmen">Show Near Route: </h2>
+    <input class="radioAmen" type="radio" name="amenities" value="atm" checked>
+    <p class="amenops">ATMs</p>
+    <input class="radioAmen" type="radio" name="amenities" value="bar">
+    <p class="amenops">Bars</p>
+    <input class="radioAmen" type="radio" name="amenities" value="parking">
+    <p class="amenops">Parking</p>
+    <input class="radioAmen" type="radio" name="amenities" value="pharmacy">
+    <p class="amenops">Pharmacies</p>
+    <input class="radioAmen" type="radio" name="amenities" value="restaurant">
+    <p class="amenops">Restaurants</p>
+    <input class="radioAmen" type="radio" name="amenities" value="supermarket">
+    <p class="amenops">Supermarket</p>
+    <button id="amenities" type="submit" value="Submit" class="amenbutton" onclick="ajaxAmen()">Submit</button>
+</div>
+<div class="amenities">
+    <button id="addToFavs" type="submit" value="Add to Favourites" class="amenbutton" onclick="saveCookie()">Add to
+        Favourites
+    </button>
+</div>
+
+
+
+<div class="favourites" id="favs">
+    <h1>Favourites</h1>
+</div>
+
+<!--END MAIN PART-->
+
+
+<!--designer-->
+<section class="ftco-section testimony-section slash" id="designer">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row justify-content-center mb-5 pb-3">
+            <div class="col-md-7 text-center heading-section heading-section-white ftco-animate">
+                <span class="subheading">What's Happening in Dublin</span>
+                <h2 class="mb-4">Events</h2>
+            </div>
+        </div>
+        <div class="row ftco-animate justify-content-center">
+            <div class="col-md-12">
+                <div class="carousel-testimony owl-carousel ftco-owl">
+                    <div class="item" data-index="1">
+                        <div class="testimony-wrap text-center">
+                            <div class="user-img mb-4" style="background-image: url(static/images/person_1.jpg)">
+                                    <span class="quote d-flex align-items-center justify-content-center">
+                                        <i class="icon-quote-left"></i>
+                                    </span>
+                            </div>
+                            <div class="text p-3">
+                                <p class="mb-4">Far far away, behind the word mountains, far from the countries Vokalia
+                                    and Consonantia, there live the blind texts.</p>
+                                <p class="name">Jason Smith</p>
+                                <span class="name"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item" data-index="2">
+                        <div class="testimony-wrap text-center">
+                            <div class="user-img mb-4" style="background-image: url(static/images/person_2.jpg)">
+                                    <span class="quote d-flex align-items-center justify-content-center">
+                                        <i class="icon-quote-left"></i>
+                                    </span>
+                            </div>
+                            <div class="text p-3">
+                                <p class="mb-4">Far far away, behind the word mountains, far from the countries Vokalia
+                                    and Consonantia, there live the blind texts.</p>
+                                <p class="name">Jason Smith</p>
+                                <span class="name"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item" data-index="3">
+                        <div class="testimony-wrap text-center">
+                            <div class="user-img mb-4" style="background-image: url(static/images/person_3.jpg)">
+                                    <span class="quote d-flex align-items-center justify-content-center">
+                                        <i class="icon-quote-left"></i>
+                                    </span>
+                            </div>
+                            <div class="text p-3">
+                                <p class="mb-4">Far far away, behind the word mountains, far from the countries Vokalia
+                                    and Consonantia, there live the blind texts.</p>
+                                <p class="name">Jason Smith</p>
+                                <span class="name"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item" data-index="4">
+                        <div class="testimony-wrap text-center">
+                            <div class="user-img mb-4" style="background-image: url(static/images/person_4.jpg)">
+                                    <span class="quote d-flex align-items-center justify-content-center">
+                                        <i class="icon-quote-left"></i>
+                                    </span>
+                            </div>
+                            <div class="text p-3">
+                                <p class="mb-4">Far far away, behind the word mountains, far from the countries Vokalia
+                                    and Consonantia, there live the blind texts.</p>
+                                <p class="name">Jason Smith</p>
+                                <span class="name"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!--END designer-->
+
+<!--INTRODUCTION-->
+
+<section class="ftco-section services-section bg-light">
+    <div class="container">
+        <div class="row d-flex">
+            <div class="col-md-6 col-lg-3 d-flex align-self-stretch ftco-animate">
+                <div class="media block-6 services d-flex">
+                    <div class="icon"><span class="flaticon-bus-2"></span></div>
+                    <div class="media-body">
+                        <h3 class="heading mb-3">Dublin Bus</h3>
+                        <p>Dublin Bus is the biggest public transport operator in the Greater Dublin Area (GDA) operating over 136 routes.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3 d-flex align-self-stretch ftco-animate">
+                <div class="media block-6 services d-flex">
+                    <div class="icon"><span class="flaticon-bus-stop"></span></div>
+                    <div class="media-body">
+                        <h3 class="heading mb-3">Dublin Bus</h3>
+                        <p>They are a wholly owned subsidiary of the state-owned Córas Iompar Éireann (CIE) Group.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3 d-flex align-self-stretch ftco-animate">
+                <div class="media block-6 services d-flex">
+                    <div class="icon"><span class="flaticon-bus"></span></div>
+                    <div class="media-body">
+                        <h3 class="heading mb-3">Dublin Bus</h3>
+                        <p>Normal services run from 5.00am until midnight.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3 d-flex align-self-stretch ftco-animate">
+                <div class="media block-6 services d-flex">
+                    <div class="icon"><span class="flaticon-bus-1"></span></div>
+                    <div class="media-body">
+                        <h3 class="heading mb-3">Dublin Bus</h3>
+                        <p>At Dublin Bus we want to provide a friendly, efficient and safe service to all our customers.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!--END INTRODUCTION-->
+
+<!--END footer-->
+
+<div id="ftco-loader" class="show fullscreen">
+    <svg class="circular" width="48px" height="48px">
+        <circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/>
+        <circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10"
+                stroke="#F96D00"/>
+    </svg>
+</div>
+
+
+<script src="../static/js/jquery.min.js"></script>
+<script src="../static/js/jquery-migrate-3.0.1.min.js"></script>
+<script src="../static/js/popper.min.js"></script>
+<!--<script src="../static/js/bootstrap.min.js"></script>-->
+<script src="../static/js/jquery.easing.1.3.js"></script>
+<script src="../static/js/jquery.waypoints.min.js"></script>
+<script src="../static/js/jquery.stellar.min.js"></script>
+<script src="../static/js/owl.carousel.min.js"></script>
+<script src="../static/js/jquery.magnific-popup.min.js"></script>
+<script src="../static/js/aos.js"></script>
+<script src="../static/js/jquery.animateNumber.min.js"></script>
+<script src="../static/js/bootstrap-datepicker.js"></script>
+<script src="../static/js/scrollax.min.js"></script>
+<script src="../static/js/main.js"></script>
+<script src="../static/js/map.js"></script>
+<script src="../static/js/cookies.js"></script>
+<script>geolocation();</script>
+
+
+</body>
+
+</html>
