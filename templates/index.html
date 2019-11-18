@@ -2,7 +2,8 @@
 <html lang="en">
 
 <head>
-    <title>Dublin Bus</title>
+    <title>MyRoute</title>
+    <link rel="icon" href="https://www.iconsdb.com/icons/preview/yellow/bus-3-xxl.png">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900&display=swap" rel="stylesheet">
@@ -25,6 +26,7 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBi-bH5_sngxNibrgygRZDhmAv2fK5hzus&libraries=places,geometry">
     </script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
     <script type=text/javascript>
         // Set-up connection variable between JS and Flask server application
@@ -38,18 +40,18 @@
 <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
     <div class="container">
         <a class="navbar-brand"
-           href="../templates/index.html"><i class="flaticon-bus-stop"></i><span>Whose Bus</span></a>
+           href="../templates/index.html"><i class="flaticon-bus-stop"></i><span>MyRoute</span></a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav"
-                aria-controls="ftco-nav" aria-expanded="true" aria-label="Toggle navigation">
+                aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="oi oi-menu"></span> Menu
         </button>
 
-        <div class="navbar-collapse collapse" id="ftco-nav">
+        <div class="collapse navbar-collapse" id="ftco-nav">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item cta"><a href="#top" class="nav-link">Home</a></li>
                 <li class="nav-item"><a href="#belowops" class="nav-link" >OPTIONS</a></li>
                 <li class="nav-item"><a class="nav-link" onclick="showFavs()">FAVOURITES</a></li>
-                <li class="nav-item"><a href="#designer" class="nav-link" >Designer</a></li>
+                <li class="nav-item"><a href="#designer" class="nav-link" >Events</a></li>
 
             </ul>
         </div>
@@ -57,17 +59,14 @@
 </nav>
 <!-- END nav -->
 
-
-
 <!--cover-->
-<div class="hero-wrap js-fullheight"
-     style="background-image: url('../static/images/bus3.jpg'); height: 800px;"
-     data-stellar-background-ratio="0.5";>
+<div class="hero-wrap js-fullheight" style="background-image: url('../static/images/bus3.jpg');"
+     data-stellar-background-ratio="0.5">
 
     <div class="container">
         <div class="row no-gutters slider-text js-fullheight align-items-center justify-content-start"
              data-scrollax-parent="true">
-            <div class="col-md-6 mt-5 pt-5 ftco-animate mt-5" data-scrollax=" properties: { translateY: '70%' }">
+            <div class="col-md-6 ftco-animate" data-scrollax=" properties: { translateY: '70%' }">
                 <h1 class="mb-4" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">DUBLIN BUS</h1>
                 <p class="mb-4" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">Transport in Dublin</p>
             </div>
@@ -115,13 +114,10 @@
 
 <!--END COVER-->
 
-<div class="inbetween"></div>
-
 <!--MAIN PART-->
 
 <a class="weatherwidget-io" href="https://forecast7.com/en/53d35n6d26/dublin/" data-label_1="DUBLIN"
    data-label_2="WEATHER" data-theme="pure" id="belowops">DUBLIN WEATHER</a>
-
 <script>
     !function (d, s, id) {
         var js, fjs = d.getElementsByTagName(s)[0];
@@ -184,60 +180,56 @@
                 <div class="carousel-testimony owl-carousel ftco-owl">
                     <div class="item" data-index="1">
                         <div class="testimony-wrap text-center">
-                            <div class="user-img mb-4" style="background-image: url(static/images/person_1.jpg)">
+                            <div class="user-img mb-4" style="background-image: url(static/images/bus1.jpg)">
                                     <span class="quote d-flex align-items-center justify-content-center">
                                         <i class="icon-quote-left"></i>
                                     </span>
                             </div>
                             <div class="text p-3">
-                                <p class="mb-4">Far far away, behind the word mountains, far from the countries Vokalia
-                                    and Consonantia, there live the blind texts.</p>
-                                <p class="name">Jason Smith</p>
+                                <p class="mb-4">Event Details</p>
+                                <p class="name">Loading details...</p>
                                 <span class="name"></span>
                             </div>
                         </div>
                     </div>
                     <div class="item" data-index="2">
                         <div class="testimony-wrap text-center">
-                            <div class="user-img mb-4" style="background-image: url(static/images/person_2.jpg)">
+                            <div class="user-img mb-4" style="background-image: url(static/images/bus2.jpg)">
                                     <span class="quote d-flex align-items-center justify-content-center">
                                         <i class="icon-quote-left"></i>
                                     </span>
                             </div>
                             <div class="text p-3">
-                                <p class="mb-4">Far far away, behind the word mountains, far from the countries Vokalia
-                                    and Consonantia, there live the blind texts.</p>
-                                <p class="name">Jason Smith</p>
+                                <p class="mb-4">Event Details</p>
+                                <p class="name">Loading details...</p>
                                 <span class="name"></span>
                             </div>
                         </div>
                     </div>
                     <div class="item" data-index="3">
                         <div class="testimony-wrap text-center">
-                            <div class="user-img mb-4" style="background-image: url(static/images/person_3.jpg)">
+                            <div class="user-img mb-4" style="background-image: url(static/images/bus3.jpg)">
                                     <span class="quote d-flex align-items-center justify-content-center">
                                         <i class="icon-quote-left"></i>
                                     </span>
                             </div>
                             <div class="text p-3">
-                                <p class="mb-4">Far far away, behind the word mountains, far from the countries Vokalia
-                                    and Consonantia, there live the blind texts.</p>
-                                <p class="name">Jason Smith</p>
+                                <p class="mb-4">Event Details</p>
+                                <p class="name">Loading details...</p>
                                 <span class="name"></span>
                             </div>
                         </div>
                     </div>
                     <div class="item" data-index="4">
                         <div class="testimony-wrap text-center">
-                            <div class="user-img mb-4" style="background-image: url(static/images/person_4.jpg)">
+                            <div class="user-img mb-4" style="background-image: url(static/images/bus4.jpg)">
                                     <span class="quote d-flex align-items-center justify-content-center">
                                         <i class="icon-quote-left"></i>
                                     </span>
                             </div>
                             <div class="text p-3">
-                                <p class="mb-4">Far far away, behind the word mountains, far from the countries Vokalia
-                                    and Consonantia, there live the blind texts.</p>
-                                <p class="name">Jason Smith</p>
+                                <p class="mb-4">Event Details</p>
+                                <p class="name">Loading details...</p>
                                 <span class="name"></span>
                             </div>
                         </div>
@@ -268,7 +260,7 @@
                 <div class="media block-6 services d-flex">
                     <div class="icon"><span class="flaticon-bus-stop"></span></div>
                     <div class="media-body">
-                        <h3 class="heading mb-3">Dublin Bus</h3>
+                        <h3 class="heading mb-3">Public Transport</h3>
                         <p>They are a wholly owned subsidiary of the state-owned Córas Iompar Éireann (CIE) Group.</p>
                     </div>
                 </div>
@@ -277,7 +269,7 @@
                 <div class="media block-6 services d-flex">
                     <div class="icon"><span class="flaticon-bus"></span></div>
                     <div class="media-body">
-                        <h3 class="heading mb-3">Dublin Bus</h3>
+                        <h3 class="heading mb-3">Service Hours</h3>
                         <p>Normal services run from 5.00am until midnight.</p>
                     </div>
                 </div>
@@ -286,7 +278,7 @@
                 <div class="media block-6 services d-flex">
                     <div class="icon"><span class="flaticon-bus-1"></span></div>
                     <div class="media-body">
-                        <h3 class="heading mb-3">Dublin Bus</h3>
+                        <h3 class="heading mb-3">Our Mission</h3>
                         <p>At Dublin Bus we want to provide a friendly, efficient and safe service to all our customers.</p>
                     </div>
                 </div>
@@ -298,6 +290,7 @@
 <!--END INTRODUCTION-->
 
 <!--END footer-->
+
 
 <div id="ftco-loader" class="show fullscreen">
     <svg class="circular" width="48px" height="48px">
@@ -311,7 +304,6 @@
 <script src="../static/js/jquery.min.js"></script>
 <script src="../static/js/jquery-migrate-3.0.1.min.js"></script>
 <script src="../static/js/popper.min.js"></script>
-<!--<script src="../static/js/bootstrap.min.js"></script>-->
 <script src="../static/js/jquery.easing.1.3.js"></script>
 <script src="../static/js/jquery.waypoints.min.js"></script>
 <script src="../static/js/jquery.stellar.min.js"></script>

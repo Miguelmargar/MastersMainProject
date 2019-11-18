@@ -30,7 +30,7 @@ function saveCookie() {
             if (flag == false) {
                 localStorage.setItem("cookie" + count.toString(), JSON.stringify(variableList));
                 count++;
-                alert("This search has been ADDED to your Favourites");
+                alert("This search has been added to your Favourites!");
                 showFavs();
                 setTimeout(function() {
                     if (getCount() > 0) {
@@ -39,7 +39,7 @@ function saveCookie() {
                         window.scrollTo(elemPos.left, elemPos.top - 75);
                     }
                     else {
-                        alert("Favourites list is empty");
+                        alert("Your favourites list is empty");
                         window.scrollTo(0,0);
                     }},
                     950);
@@ -49,7 +49,7 @@ function saveCookie() {
             }
         }
         else {
-            alert("No previous search available to save, please perform a search to save it");
+            alert("Please perform a search to save it to your favourites! ");
         }
     }
     else {
@@ -112,9 +112,11 @@ function showFavs() {
             favRem.appendChild(rem);
             favButt.appendChild(favRem);
 
+
             document.getElementById("favs").appendChild(favButt);
         }
     };
+
     var elemPos = $("#belowops").position();
 
     if ($("div.favourites").css("display") != "none") {
@@ -123,7 +125,7 @@ function showFavs() {
     }
     else if ($("div.favourites").css("display") == "none") {
         if (getCount() == 0) {
-            alert("No Search in Favourites to Show. Please Make a Search to Then Save It");
+            alert("You have no favourites yet! Make a search to save it")
             window.scrollTo(0,0);
         }
         else {
@@ -162,6 +164,12 @@ function loadFav(num) {
         })
 }
 
+
+
+
+//function clearAll() {
+//    localStorage.clear();
+//}
 
 function getCookie(num) {
     var cookie = JSON.parse(localStorage.getItem("cookie" + num.toString()));

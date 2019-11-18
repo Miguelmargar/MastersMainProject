@@ -3,9 +3,9 @@ from operator import itemgetter
 from datetime import date, time, timedelta
 from tweepy import OAuthHandler, API, Cursor
 from passw import *
+import re
 from geopy.distance import geodesic
-# from geopy.distance import great_circle
-from darksky import forecast
+# from darksky import forecast
 
 
 class Stops:
@@ -302,168 +302,11 @@ class Stops:
 
                     for status in Cursor(auth_api.user_timeline, id="@dublinbusnews").items():
                         if "#DBSvcUpdate" in status.text:
-                            if ("#DB" + route.lower()) in status.text and status.text not in option:
+                            if (("#DB" + route.lower()) or ("#DB" + re.sub("\D", "",route.lower())) or "due to" or "Temporary") in status.text and status.text not in option:
                                 option.append(status.text)
                         if status.created_at < end_date:
                             break
             tweetlist.append(option)
 
         return(tweetlist)
-
-
-    def get_stop_distances(self, stops):
-        self.stops = stops
-
-        distances = []
-
-        for option in self.stops:
-            option_list = []
-            for leg in option:
-                leg_list = []
-
-                for i, stop in enumerate(leg):
-                    try:
-                        stopA = (float(stop[0]), float(stop[1]))
-                        stopB = (float(leg[i + 1][0]), float(leg[i + 1][1]))
-                        stopNo = leg[i + 1][2]
-                        distance = geodesic(stopA, stopB).km * 1000
-                        leg_list.append((stopNo[-5:].lstrip("0"), distance))
-                    except:
-                        break
-
-                option_list.append(leg_list)
-            distances.append(option_list)
-        return distances
-
-
-    def get_seconds_model(self, goog_data):
-        self.goog_data = goog_data
-
-        seconds_final = []
-
-        for i, op in enumerate(self.goog_data["routes"]):
-            seconds_options = []
-            for j, leg in enumerate(self.goog_data["routes"][i]["legs"][0]["steps"]):
-
-                if "transit_details" in goog_data["routes"][i]["legs"][0]["steps"][j] and goog_data["routes"][i][
-                    "legs"][0]["steps"][j]["transit_details"]["line"]["vehicle"]["type"] == "BUS":
-
-                    time = self.goog_data["routes"][i]["legs"][0]["steps"][j]["transit_details"][
-                        "departure_time"]["text"]
-
-                    if time[-2:] == "pm":
-                        if time[:-2].split(":")[0] != "12":
-                            hour = (int(time[:-2].split(":")[0]) + 12) * 60 * 60
-                        else:
-                            hour = int(time[:-2].split(":")[0]) * 60 * 60
-                    else:
-                        hour = int(time[:-2].split(":")[0]) * 60 * 60
-
-                    mins = int(time[:-2].split(":")[1]) * 60
-                    seconds = hour + mins
-
-                    seconds_options.append(seconds)
-
-            seconds_final.append(seconds_options)
-        return seconds_final
-
-
-    def weather_get(self, date, time):
-        self.date = date
-        self.time = time + ":00"
-
-        resultdic = {}
-
-        # format - 2018-10-24T19:06:32
-        try:
-            time = self.date + "T" + self.time
-            weather = forecast("0f94f1e529d8359a54cc753b465312d7", 53.344505, -6.258602, time=time)
-            resultdic["temperature"] = ((weather.temperature - 32)*5)/9
-            resultdic["rain"] = weather.precipIntensity
-            resultdic["humidity"] = weather.humidity
-            return resultdic
-        except IOError as e:
-            return ("ERROR_WEATHER_GET", e)
-
-
-
-    def weekend_holiday(self, date):
-
-        import holidays
-
-        #Date format - 2018-01-01 (y-m-d) - string
-        return_dic = {}
-        holidays = holidays.Ireland()
-        try:
-            if datetime.datetime.strptime(date, '%Y-%m-%d').weekday() > 4:
-                return_dic["weekend"] = 1
-            else:
-                return_dic["weekend"] = 0
-
-            if datetime.datetime.strptime(date, '%Y-%m-%d') in holidays:
-                return_dic["holiday"] = 1
-            else:
-                return_dic["holiday"] = 0
-            return return_dic
-        except ValueError as e:
-            return ("ERROR_WEEKEND_HOLIDAY",e)
-
-
-    def run_model(self, stoplist, time, precipitation, temperature, humidity, holiday, weekend):
-
-        import pickle
-        import numpy as np
-        import csv
-        from sklearn.preprocessing import StandardScaler
-        from sklearn.svm import SVR
-
-        self.stoplist = stoplist
-
-
-        #Import model and scalers
-        zonedict = {}
-        with open('stopzones.csv') as zone_csv:
-            csv_reader = csv.reader(zone_csv, delimiter=',')
-            for row in csv_reader:
-                zonedict[str(row[0])] = str(row[1])
-
-        output_list = []
-
-        for i,option in enumerate(self.stoplist):
-            option_list = []
-            
-            for p,leg in enumerate(option):
-                leg_list = []
-                
-                
-                for j,stop in enumerate(leg):
-                    
-                    try:
-                        zone = zonedict[str(stop[0])]
-                    except:
-                        zone = 6
-                    target_scaler = 'tar_scaler_{0}.sav'.format(zone)
-                    feature_scaler = 'feat_scaler_{0}.sav'.format(zone)
-                    model = "model_zone_{0}.sav".format(zone)
-
-                    #Load files
-                    tar_scaler = pickle.load(open(target_scaler, 'rb'))
-                    feat_scaler = pickle.load(open(feature_scaler, 'rb'))
-                    model = pickle.load(open(model, 'rb'))
-
-                    dist = stop[1]
-            
-                    to_scale=np.array([time[i][p], precipitation, temperature, humidity, dist, holiday, weekend])
-                   
-                    to_scale = to_scale.reshape(1, -1)
-                    to_predict= feat_scaler.transform(to_scale)
-                    
-                    prediction = abs(tar_scaler.inverse_transform(model.predict(to_predict)))
-                    
-                    leg_list.append(prediction)
-
-                option_list.append(int(sum(leg_list)/100))
-            output_list.append(int(sum(option_list)))
-        
-        return output_list
 

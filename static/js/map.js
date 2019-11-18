@@ -280,7 +280,7 @@ function draw_markers(intermediateStops, option) {
 
 // Create the html to show the different options with minimal info
 function showOptions() {
-    console.log(googleData);
+	console.log(googleData);
 
     $('div').remove(".opbutt");
     $('div').remove(".opinfo");
@@ -303,9 +303,8 @@ function showOptions() {
              lines = lines.join('/');
              display_routes.add(lines);
          }
-//         for (const route of display_routes) {
-//             addRoute(route);
-//         }
+         
+         
         var countOps = 0;
 //        Build the options buttons
         for (var i = 0; i < googleData['routes'].length; i++) {
@@ -340,6 +339,7 @@ function showOptions() {
 
             allSteps.appendChild(topAllSteps);
 
+
             var miniMap = document.createElement("div");
             miniMap.setAttribute("class", "minimap");
             miniMap.setAttribute("id", "map"+i.toString());
@@ -361,12 +361,11 @@ function showOptions() {
             time.appendChild(timetext);
             indiv1.appendChild(time);
             opbutt.appendChild(indiv1);
-
+	    
             var indiv2 = document.createElement("div");
             indiv2.setAttribute("class", "indivmid");
             var time = document.createElement("p");
-            var timetext = document.createTextNode(googleData['routes'][i]['legs'][0]['departure_time']['text'] + " to "
-            + googleData['routes'][i]['legs'][0]['arrival_time']['text']);
+            var timetext = document.createTextNode(googleData['routes'][i]['legs'][0]['departure_time']['text'] + " to " + googleData['routes'][i]['legs'][0]['arrival_time']['text']);
             time.appendChild(timetext);
             indiv2.appendChild(time);
             opbutt.appendChild(indiv2);
@@ -374,7 +373,6 @@ function showOptions() {
             var indiv3 = document.createElement("div");
             indiv3.setAttribute("class", "indivright");
             var buses = document.createElement("p");
-
             var allBuses = [];
             for (var j = 0; j < googleData['routes'][i]['legs'][0]['steps'].length; j++ ) {
 
@@ -399,7 +397,7 @@ function showOptions() {
                     var instruction = document.createTextNode
                     ("Get On Bus " +  googleData['routes'][i]['legs'][0]['steps'][j]['transit_details']
                     ['line']['short_name'] + googleData['routes'][i]['legs'][0]['steps'][j]['html_instructions']
-                    .substring(3));
+                    .substring(3))
 
                     var off = document.createTextNode
                     ("Get Off At " + googleData['routes'][i]['legs'][0]['steps'][j]['transit_details']
@@ -419,7 +417,7 @@ function showOptions() {
                      alert.appendChild(alertMessP);
                      addAlert = true;
                  }
-            }
+            };
             var timetext = document.createTextNode(allBuses.join(" / "));
             buses.appendChild(timetext);
             indiv3.appendChild(buses);
@@ -482,13 +480,13 @@ function checkDateAndTime() {
     nowDayTimeSeconds = nowDayTime.getTime() / 1000;
 
     if (formSeconds > (nowDayTimeSeconds + 2764800)) {
-        alert("INVALID DATE - DATE HAS TO BE WITHIN 31 DAYS OF TODAY - PLEASE SEARCH AGAIN");
+        alert("Please enter a date within 31 days");
         return false;
     }
     else {
         if (htmlDepArr == "dep") {
-                if (formSeconds < nowDayTimeSeconds) {
-                        alert("INVALID DATE OR TIME - DATE AND TIME CANNOT BE IN THE PAST");
+                if (formSeconds + 60 < nowDayTimeSeconds) {
+                        alert("Sorry, the time you entered is in the past!");
                     } else {
                         return true;
                     }
@@ -506,7 +504,7 @@ function checkDateAndTime() {
                         }
                     };
                     if (delayed > 0) {
-                        alert("BEWARE! TIME GIVEN IS TOO LATE FOR SOME OR ALL OF THE OPTIONS SHOWN BELOW");
+                        alert("The entered time may be too late for some of the options shown below");
                         return true;
                     }
                 }
@@ -536,7 +534,7 @@ function showSteps(num) {
 // Choose the option number and display it
 function chooseOption(num) {
 
-    createChart(num);
+	createChart(num);
     initMap(num);
     showSteps(num);
     draw_markers(intermediateStops, num);
@@ -615,7 +613,6 @@ function ajaxInt() {
                     intermediateStops = response['interstops'];
                     prediction = response['prediction'];
                     disruptions = response["disruptions"];
-
                     showOptions();
                 });
             }
@@ -627,9 +624,10 @@ function ajaxInt() {
 function createChart(num) {
     var chart = document.getElementById("mychart"+num.toString());
     Chart.defaults.global.defaultFontColor = "white";
-    var best = 5;
-    var main = 8;
-    var worst = 10;
+    var time = googleData['routes'][num]['legs'][0]['duration']['value'] / 60
+    var best = time - 8;
+    var main = time;
+    var worst = time + 15;
 
     var data = {
         labels: ["Best Case", "Main Prediction", "Worst Case"],

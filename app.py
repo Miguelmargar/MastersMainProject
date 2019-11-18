@@ -27,7 +27,7 @@ def directions():
     intermediate = Stops()
     secs = intermediate.getSeconds(frontDate, frontTime)
     get_goo_data = intermediate.get_direct_goo(postA, postB, secs, frontDepArr)
-    # jsonObj = intermediate.get_direct_goo(postA, postB, secs, frontDepArr)
+#     jsonObj = intermediate.get_direct_goo(postA, postB, secs, frontDepArr)
     interStops = intermediate.fin(get_goo_data)
     global full
     notifications = intermediate.notification_check(get_goo_data)
@@ -47,11 +47,13 @@ def Amenities():
 
 @app.route('/events', methods=["GET", "POST"])
 def events():
+    print(request)
 
     cardlist = []
     site = requests.get('https://dublin.ie/whats-on/').text
     soupsite = BeautifulSoup(site, 'lxml')
-    cards = soupsite.findAll("article", {"class": "event card "})
+    cards = soupsite.findAll("article", {"class": "event card"})
+
     for i in cards:
         templist = []
         try:
