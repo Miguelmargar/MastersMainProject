@@ -5,7 +5,6 @@ from tweepy import OAuthHandler, API, Cursor
 from passw import *
 import re
 from geopy.distance import geodesic
-# from darksky import forecast
 
 
 class Stops:
@@ -36,10 +35,10 @@ class Stops:
 
     def lat_lon(self, busNo, head_sign, goolat, goolon):
 
-        user = 'root'
+        user = db_user
         password = db_key
-        host = '127.0.0.1'
-        database = 'research'
+        host = db_host
+        database = db_name
 
         try:
             con = pymysql.connect(host=host, database=database, user=user, password=password)
@@ -83,10 +82,10 @@ class Stops:
 
     def db_query3(self, head_sign, bus_no, stop_noA, stop_noB, diff):
 
-        user = 'root'
+        user = db_user
         password = db_key
-        host = '127.0.0.1'
-        database = 'research'
+        host = db_host
+        database = db_name
 
         try:
             con = pymysql.connect(host=host, database=database, user=user, password=password)
@@ -120,10 +119,10 @@ class Stops:
 
     def db_query4(self, bus_no, head_sign, seqA, seqB, tripid):
 
-        user = 'root'
+        user = db_user
         password = db_key
-        host = '127.0.0.1'
-        database = 'research'
+        host = db_host
+        database = db_name
 
         try:
             con = pymysql.connect(host=host, database=database, user=user, password=password)
